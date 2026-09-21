@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lens Fixer</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header><a href="/">‹ Apps</a><h1>Lens Fixer</h1></header>
+<main>
+<div class="lens-layout">
+  <div class="panel">
+    <h3>Photos <span class="hint">(newest first)</span></h3>
+    <div class="row"><input id="search" type="search" placeholder="filter by name…" style="width:100%"></div>
+    <div class="row">
+      <label>From<input id="datefrom" type="date"></label>
+      <label>To<input id="dateto" type="date"></label>
+    </div>
+    <div id="filelist"></div>
+  </div>
+  <div class="panel">
+    <h3 id="photoname">No photo selected</h3>
+    <p class="hint">Drag on the image to draw a region. Boxes are in full-resolution pixels.</p>
+    <canvas id="canvas"></canvas>
+    <div class="row">
+      <button id="suggest">Load suggested regions</button>
+      <button id="clear">Clear regions</button>
+    </div>
+    <h3>Regions</h3>
+    <table class="boxtable" id="boxtable"></table>
+  </div>
+  <div class="panel">
+    <h3>Fix method</h3>
+    <div class="row"><label>Method<select id="method"></select></label></div>
+    <div class="row">
+      <label>Kernel size<input id="kernel" type="number" value="31" min="3" max="199" step="2"></label>
+      <label>Variance threshold<input id="varth" type="number" value="50" min="0" step="1"></label>
+      <label>Inpaint radius<input id="radius" type="number" value="3" min="1" max="20" step="1"></label>
+    </div>
+    <div class="row">
+      <button class="primary" id="previewBtn">Preview</button>
+      <button class="primary" id="saveBtn">Save _fix copy</button>
+    </div>
+    <div id="status" class="hint"></div>
+    <img id="preview" alt="">
+  </div>
+</div>
+</main>
+<script src="/static/lens.js"></script>
+</body>
+</html>

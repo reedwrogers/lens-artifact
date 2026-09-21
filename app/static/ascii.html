@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASCII Studio</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header><a href="/">‹ Apps</a><h1>ASCII Studio</h1></header>
+<main>
+<div class="ascii-layout">
+  <div class="panel">
+    <h3>New conversion</h3>
+    <div class="row"><label>mp4 file<input id="file" type="file" accept="video/mp4,video/*"></label></div>
+    <div class="row">
+      <label>Width (chars)<input id="width" type="number" value="100" min="20" max="240"></label>
+      <label>Max frames<input id="maxframes" type="number" value="300" min="1" max="2000"></label>
+    </div>
+    <div class="row"><button class="primary" id="convert">Convert</button></div>
+    <div id="status" class="hint"></div>
+    <h3>Saved jobs</h3>
+    <div id="jobs"></div>
+  </div>
+  <div class="panel">
+    <h3 id="jobtitle">No job loaded</h3>
+    <div class="row">
+      <button id="play">Play</button>
+      <button id="stop">Stop</button>
+      <label>fps<input id="fps" type="number" value="12" min="1" max="60"></label>
+      <a id="download" href="#" style="align-self:center">Download JSON</a>
+    </div>
+    <pre class="screen" id="screen"></pre>
+  </div>
+</div>
+</main>
+<script src="/static/ascii.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+services:
+  lens-artifact:
+    build: .
+    image: lens-artifact:latest
+    ports:
+      - "8123:8000"
+    environment:
+      PHOTOS_DIR: /photos
+      DATA_DIR: /data
+    volumes:
+      # Photo library (read-write: app saves *_fix.JPG copies alongside originals)
+      - /home/tars/Media/t9_mnt/Pictures/DCIM/100MSDCF:/photos
+      # App data: ASCII studio uploads + converted frames
+      - ./data:/data
+    restart: unless-stopped
