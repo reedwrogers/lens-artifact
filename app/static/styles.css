@@ -31,6 +31,12 @@ button:disabled { opacity: .5; cursor: default; }
 label { font-size: 13px; color: #aab2c0; display: flex; flex-direction: column; gap: 4px; }
 #canvas { max-width: 100%; border: 1px solid #333a46; border-radius: 8px; cursor: crosshair; touch-action: none; }
 #preview { max-width: 100%; border: 1px solid #333a46; border-radius: 8px; margin-top: 8px; }
+#filelist .filerow { display: flex; gap: 8px; align-items: flex-start; }
+#filelist .filerow input[type="checkbox"] { margin-top: 9px; flex: none; }
+#filelist .filetext { min-width: 0; flex: 1; }
+span.edited { font-size: 11px; background: #2f6b3a; color: #d3f0da; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+label.selall { flex-direction: row; align-items: center; }
+.exportbar { align-items: center; }
 .boxtable { width: 100%; border-collapse: collapse; font-size: 13px; }
 .boxtable td { padding: 2px; }
 .boxtable input { width: 64px; }

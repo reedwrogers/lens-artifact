@@ -6,7 +6,8 @@ Self-hosted Docker app (runs on the home server) with two apps on the home page:
   artifacts, pick a fix method (median / adaptive median from the original
   notebook, inpainting, bilateral), preview, then save a `*_fix.JPG` copy
   **next to the original** with EXIF and file dates preserved. Originals are
-  never overwritten.
+  never overwritten. Edited photos show an `edited` badge; tick checkboxes
+  to export a selection as a `.zip` (fixed copy included when it exists).
 - **ASCII Studio** (`/ascii`) — upload an mp4, convert it to ASCII frames with
   the same method as the old `ascii_video.ipynb`, play it back in the browser,
   or download the frames JSON.

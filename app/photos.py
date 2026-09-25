@@ -7,6 +7,7 @@ cache entries are keyed on file size + mtime and re-read when those change.
 """
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -54,13 +55,26 @@ def _load_cache(data_dir):
     return {}
 
 
+def fix_name_for(name: str):
+    """On-disk name of the ``*_fix`` copy saved beside ``name``."""
+    stem, ext = os.path.splitext(name)
+    return f"{stem}{FIX_SUFFIX}{ext}"
+
+
 def scan(photos_dir, data_dir=None):
-    """Return [{name, size, mtime, taken}] for all library images."""
+    """Return [{name, size, mtime, taken, fixed}] for all library images.
+
+    ``fixed`` is True when a ``*_fix`` copy sits beside the original
+    (i.e. the photo was edited in Lens Fixer). It is checked live on
+    every scan — not cached — so a newly saved fix shows up immediately.
+    """
     photos_dir = Path(photos_dir)
     cache = _load_cache(data_dir)
+    files = [p for p in photos_dir.iterdir() if p.is_file()]
+    present = {p.name for p in files}
     entries = {}
-    for p in photos_dir.iterdir():
-        if not p.is_file() or p.suffix not in IMAGE_EXTS:
+    for p in files:
+        if p.suffix not in IMAGE_EXTS:
             continue
         if FIX_SUFFIX in p.stem:
             continue
@@ -78,6 +92,7 @@ def scan(photos_dir, data_dir=None):
                                "taken": taken}
         entries.setdefault(p.name, {"size": st.st_size, "mtime": st.st_mtime,
                                     "taken": hit.get("taken") if hit else None})
+        entries[p.name]["fixed"] = fix_name_for(p.name) in present
     cache_path = _cache_file(data_dir)
     if cache_path:
         try:

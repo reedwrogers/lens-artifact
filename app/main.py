@@ -5,6 +5,7 @@ import io
 import json
 import os
 import uuid
+import zipfile
 from pathlib import Path
 
 import cv2
@@ -159,6 +160,48 @@ def preview(payload: dict):
     except ValueError as e:
         raise HTTPException(400, str(e))
     return Response(_encode_jpeg(fixed), media_type="image/jpeg")
+
+
+MAX_EXPORT_FILES = 500
+
+
+def _export_file_for(name: str) -> Path:
+    """File to put in the zip for ``name``: the ``*_fix`` copy when the
+    photo was edited in Lens Fixer, otherwise the original."""
+    original = _photo_path(name)
+    fix = original.parent / photos.fix_name_for(original.name)
+    if fix.is_file() and fix.suffix in IMAGE_EXTS:
+        return fix
+    return original
+
+
+def build_export_zip(names: list) -> bytes:
+    """Zip bytes for the selected photos (fixed copy preferred)."""
+    if not names:
+        raise HTTPException(400, "No photos selected")
+    if len(names) > MAX_EXPORT_FILES:
+        raise HTTPException(400, f"Select at most {MAX_EXPORT_FILES} photos")
+    seen = set()
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_STORED) as z:
+        for name in names:
+            if not isinstance(name, str) or name in seen:
+                continue
+            seen.add(name)
+            src = _export_file_for(name)  # validates the name
+            z.write(src, src.name)
+    return buf.getvalue()
+
+
+@app.post("/api/export")
+def export_photos(payload: dict):
+    names = payload.get("names", [])
+    if not isinstance(names, list):
+        raise HTTPException(400, "Expected {\"names\": [...]}")
+    blob = build_export_zip(names)
+    return Response(blob, media_type="application/zip",
+                    headers={"Content-Disposition":
+                             'attachment; filename="lens_export.zip"'})
 
 
 @app.post("/api/save")

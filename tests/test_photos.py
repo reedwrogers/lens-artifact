@@ -82,3 +82,22 @@ def test_cache_survives_rescan(lib):
     second = photos.list_photos(pics, data)
     assert [i["name"] for i in first["items"]] == \
         [i["name"] for i in second["items"]]
+
+
+def test_fixed_flag_marks_edited_photos(lib):
+    pics, data = lib
+    flags = {i["name"]: i["fixed"] for i in photos.list_photos(pics, data)["items"]}
+    assert flags["NEW.JPG"] is True
+    assert flags["MID.JPG"] is False
+    assert flags["OLD.JPG"] is False
+
+
+def test_fixed_flag_appears_after_fix_created(lib):
+    pics, data = lib
+    before = {i["name"]: i["fixed"]
+              for i in photos.list_photos(pics, data)["items"]}
+    assert before["MID.JPG"] is False
+    make_jpg(pics / "MID_fix.JPG", "2022:01:10 12:00:00")
+    after = {i["name"]: i["fixed"]
+             for i in photos.list_photos(pics, data)["items"]}
+    assert after["MID.JPG"] is True
